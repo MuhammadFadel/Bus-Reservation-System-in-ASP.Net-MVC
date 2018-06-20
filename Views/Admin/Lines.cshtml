@@ -1,0 +1,86 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.Line>
+@{
+    ViewBag.Title = "Lines";
+}
+
+
+<div class="container">
+
+    <h2>Lines</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Lines on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="lines">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-sliders-h"></span> Line ID</th>
+                        <th><span class="fa fa-location-arrow"></span> From</th>
+                        <th><span class="fa fa-flag-checkered"></span> To</th>
+                        <th><span class="fa fa-dollar"></span> Price</th>
+                        <th>
+                            <a href="@Url.Action("AddLine", "Admin")" class="btn btn-link">
+                                <span class="fa fa-plus fa-fw  text-info"></span> Add New Line
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Line in Model)
+                    {
+                        <tr>
+                            <td>@Line.Id</td>
+                            <td>@Line.From</td>
+                            <td>@Line.To</td>
+                            <td>$@Line.Price</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="@Url.Action("ViewLine", "Admin", new { id = Line.Id})" class="btn btn-info">View</a>
+                                    <a href="@Url.Action("EditLine", "Admin", new { id = Line.Id})" class="btn btn-success">Edit</a>
+                                    @*<a href="@Url.Action("DeleteLine", "Admin", new { id = Line.Id})" class="btn btn-danger">Delete</a>*@
+                                    <button class="btn btn-danger js-delete" data-line-id="@Line.Id">Delete</button> 
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#lines").DataTable();
+
+            $("#lines").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Delete This Line!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/DeleteLine/" + button.attr("data-line-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Successful Process");
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });                                                    
+                    }
+                });
+            });            
+        });
+    </script>
+
+}

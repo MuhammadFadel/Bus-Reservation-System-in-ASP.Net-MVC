@@ -1,0 +1,61 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.Feedback>
+@{
+    ViewBag.Title = "Feedbacks";
+}
+
+
+<div class="container">
+
+    <h2>Feedbacks</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Feedbacks on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="feedbacks">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-id-badge"></span> Feedback ID</th>
+                        <th><span class="fa fa-user-o"></span> Passenger</th>
+                        <th><span class="fa fa-bars"></span> Line</th>
+                        <th><span class="fa fa-envelope-o"></span> Feedback Message</th>
+                        <th><span class="fa fa-calendar"></span> Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Feedback in Model)
+                    {
+                        <tr>
+                            <td>@Feedback.Id</td>
+                            <td><a href="@Url.Action("ViewPassenger", "Admin", new { id = Feedback.PassengerId.Id})">@Feedback.PassengerId.ApplicationUser.UserName </a></td>
+                            <td><a href="@Url.Action("ViewLine", "Admin", new { id = Feedback.TripId.Id})">From @Feedback.TripId.Line.From To @Feedback.TripId.Line.To</a></td>
+                            <td>@Feedback.FeedbackMessage</td>
+                            <td>@Feedback.Timestamp</td>
+                            <td>                                
+                                    <a href="@Url.Action("ViewFeedback", "Admin", new { id = Feedback.Id})" class="btn btn-info">View</a>                                                                    
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#feedbacks").DataTable();
+        });
+
+    </script>
+
+}

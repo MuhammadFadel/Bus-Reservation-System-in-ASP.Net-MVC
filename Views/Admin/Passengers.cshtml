@@ -1,0 +1,61 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.Passenger>
+
+@{
+    ViewBag.Title = "Passengers";
+}
+
+<div class="container">
+
+    <h2>Passengers</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Passengers on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="passengers">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-user-o"></span> Name</th>
+                        <th><span class="fa fa-at"></span> Email</th>
+                        <th><span class="fa fa-mobile"></span> Mobile Phone</th>
+                        <th><span class="fa fa-address-card-o"></span> Identity Number</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Passenger in Model)
+                    {
+                        <tr>
+                            <td>@Passenger.ApplicationUser.UserName</td>
+                            <td>@Passenger.ApplicationUser.Email</td>
+                            <td>@Passenger.ApplicationUser.PhoneNumber</td>
+                            <td>@Passenger.ApplicationUser.SSN</td>
+                            <td>
+                                
+                                    <a href="@Url.Action("ViewPassenger", "Admin", new { id = Passenger.Id})" class="btn btn-info">View</a>
+                                    
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#passengers").DataTable();
+        });        
+            
+    </script>
+
+}

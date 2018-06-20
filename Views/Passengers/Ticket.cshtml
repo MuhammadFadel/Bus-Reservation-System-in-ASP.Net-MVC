@@ -1,0 +1,130 @@
+﻿@model OnlineBusReservationV6.Models.PassengerTicketView
+@{
+    ViewBag.Title = "Ticket";
+}
+
+<div class="container">
+    <br /><br />
+    <h2>Ticket</h2>
+    <div class="row">
+        <div class="col-md-4">
+            @* Information *@
+            <table class="table table-responsive table-condensed">
+                <tr>
+                    <td>Passenger</td>
+                    <td>@Model.Passenger.ApplicationUser.UserName</td>                    
+                </tr>
+                <tr>
+                    <td>Line</td>
+                    <td>From @Model.Ticket.Trip.Line.From To @Model.Ticket.Trip.Line.To</td>
+                </tr>
+                <tr>
+                    <td>Bus Number</td>
+                    <td>@Model.Ticket.Trip.Bus.BusNumber</td>
+                </tr>
+                <tr>
+                    <td>Driver Name</td>
+                    <td>@Model.Ticket.Trip.Bus.Driver.Name</td>
+                </tr>
+                <tr>
+                    <td>Driver Phone</td>
+                    <td>@Model.Ticket.Trip.Bus.Driver.PhoneNumber</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td>$@Model.Ticket.Trip.Line.Price</td>
+                </tr>
+                <tr>
+                    <td>Time</td>
+                    <td>@Model.Ticket.Trip.Time</td>
+                </tr>
+                <tr>
+                    <td>Blocked</td>
+                    <td>@Model.Ticket.IsBlocked</td>
+                </tr>
+            </table>
+            <br />
+            @Html.ActionLink("Back To Profile", "Index", null, new { @class = "btn btn-info btn-block"})
+        </div>
+
+
+        
+        @{
+            DateTime Time = DateTime.Parse(Model.Ticket.Trip.Time);
+            String TimeString = Time.ToString("dd/MM/yyyy HH:mm");
+            Time = DateTime.ParseExact(TimeString, "dd/MM/yyyy HH:mm", null);
+            DateTime Today = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", null);
+            if (DateTime.Compare(Time, Today) >= 0)
+            {
+                <div class="col-md-6 col-md-offset-1">
+                    @* Seats *@
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Seats Informations</div>
+                        <div class="panel-body">
+                            <table class="table table-responsive table-striped">
+                                <tr>
+                                    <td>Seat Number</td>
+                                    <td>Time</td>
+                                </tr>
+                                @foreach (var Seat in Model.Seats)
+                                {
+                                    <tr>
+                                        <td>@Seat.SeatNumber</td>
+                                        <td>@Seat.Time</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4">
+                    @* Seats *@
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Seats Informations</div>
+                        <div class="panel-body">
+                            <table class="table table-responsive table-striped">
+                                <tr>
+                                    <td>Seat Number</td>
+                                    <td>Time</td>
+                                </tr>
+                                @foreach (var Seat in Model.Seats)
+                                {
+                                    <tr>
+                                        <td>@Seat.SeatNumber</td>
+                                        <td>@Seat.Time</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    @* Feedbacks *@
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Feedbacks Informations</div>
+                        <div class="panel-body">
+                            <table class="table table-responsive table-striped">
+                                <tr>
+                                    <td>Feedback Message</td>
+                                    <td>Time</td>
+                                </tr>
+                                @foreach (var Feedback in Model.Feedbacks)
+                                {
+                                    <tr>
+                                        <td>@Feedback.FeedbackMessage</td>
+                                        <td>@Feedback.Timestamp</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }          
+    </div>
+</div>
+
+

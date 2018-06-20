@@ -1,0 +1,66 @@
+﻿@model OnlineBusReservationV6.Models.TripLineBusView
+
+@{
+    ViewBag.Title = "AddTrip";
+}
+
+
+<div class="container">
+
+    <h2>Add Trip</h2>
+
+    @using (Html.BeginForm("AddTrip", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Trip</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Trip.BusId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.Trip.BusId, new SelectList(Model.Buses, "Id", "BusNumber"), "Select Bus", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Trip.BusId, "", new { @class = "text-danger" })
+                </div>
+            </div>            
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Trip.LineId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.Trip.LineId, new SelectList(Model.Lines, "Id", "ToString"), "Select Trip", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Trip.LineId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Trip.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input type="datetime-local" name="Trip.Time"  required/>                    
+                    @Html.ValidationMessageFor(model => model.Trip.Time, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Trip.TripPicture, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input type="file" name="TripPictureFile" />
+                    @Html.ValidationMessageFor(model => model.Trip.TripPicture, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-block btn-info" required />
+                    <div>
+                        <br />
+                        @Html.ActionLink("Back to Trips List", "Trips", null, new { @class = "btn btn-block btn-success" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div>

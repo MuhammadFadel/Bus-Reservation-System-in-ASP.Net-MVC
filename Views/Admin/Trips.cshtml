@@ -1,0 +1,88 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.Trip>
+
+@{
+    ViewBag.Title = "Trips";
+}
+
+<div class="container">
+
+    <h2>Trips</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Trips on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="trips">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-location-arrow"></span> Line</th>
+                        <th><span class="fa fa-bus"></span> Bus Number</th>
+                        <th><span class="fa fa-user-circle"></span> Driver</th>
+                        <th><span class="fa fa-calendar-o"></span> Time</th>
+                        <th><span class="fa fa-flag-checkered"></span> Booked Seats</th>
+                        <th><span class="far fa-calendar-plus-o"></span> Free Seats</th>
+                        <th>
+                            <a href="@Url.Action("AddTrip", "Admin")" class="btn btn-link">
+                                <span class="fa fa-plus fa-fw  text-info"></span> Add New Trip
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Trip in Model)
+                    {
+                        <tr>
+                            <td>From @Trip.Line.From to @Trip.Line.To</td>
+                            <td>@Trip.Bus.BusNumber</td>
+                            <td>@Trip.Bus.Driver.Name</td>
+                            <td>@Trip.Time</td>
+                            <td>@Trip.Bus.BookedSeats.Count</td>
+                            <td>@(@Trip.Bus.MaximumSeats - @Trip.Bus.BookedSeats.Count)</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="@Url.Action("ViewTrip", "Admin", new { id = Trip.Id})" class="btn btn-info">View</a>
+                                    <a href="@Url.Action("EditTrip", "Admin", new { id = Trip.Id})" class="btn btn-success">Edit</a>
+                                    @*<a href="@Url.Action("DeleteTrip", "Admin", new { id = Trip.Id})" class="btn btn-danger">Delete</a>*@
+                                    <button class="btn btn-danger js-delete" data-trip-id="@Trip.Id">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#trips").DataTable();
+
+            $("#trips").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Delete This Trip!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/DeleteTrip/" + button.attr("data-trip-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Successful Process");
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });
+                    }
+                });
+            });            
+        });
+    </script>
+
+}

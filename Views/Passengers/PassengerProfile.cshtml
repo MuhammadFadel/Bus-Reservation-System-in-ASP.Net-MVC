@@ -1,0 +1,193 @@
+﻿@model OnlineBusReservationV6.Models.PassengerUserTicketView
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h2>Information</h2>
+            <br />
+            <img src="~/Uploads/@Model.Passenger.ApplicationUser.ProfilePicture" 
+                 class="img-responsive img-thumbnail" width="250px" height="400px"
+                 title="@Model.Passenger.ApplicationUser.UserName Profile Picture" />
+            <br /><br />            
+            <table class="table table-responsive table-condensed">
+                @*<tr>
+                    <td>Name</td>
+                    <td>@Model.Passenger.ApplicationUser.UserName</td>
+                </tr>*@
+                <tr>
+                    <td>Email</td>
+                    <td>@Model.Passenger.ApplicationUser.Email</td>
+                </tr>
+                <tr>
+                    <td>SSN</td>
+                    <td>@Model.Passenger.ApplicationUser.SSN</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>@Model.Passenger.ApplicationUser.PhoneNumber</td>
+                </tr>
+            </table>
+
+            <div>
+                <br />                
+                <a href="@Url.Action("AddPhoneNumber", "Manage", new { id = Model.Passenger.Id })" class="btn btn-block btn-warning">Change My Phone Numebr</a>
+                <a href="@Url.Action("ChangePassword", "Manage", new { id = Model.Passenger.Id })" class="btn btn-block btn-success">Change My Password</a>
+            </div>
+        </div>
+
+        <div class="col-md-7 col-md-offset-1">
+            <br /><br />
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#Ticket">Ticket</a></li>
+                <li><a data-toggle="tab" href="#ExpiredTicket">Expired Ticket</a></li>
+            </ul>
+
+            <div class="tab-content">
+
+                <div id="Ticket" class="tab-pane fade in active">
+                    <br />
+                    @if (Model.Tickets != null)
+                    {
+                        <table class="table table-responsive table-striped" id="currentTickets">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Trip Number</th>
+                                    <th>Line</th>
+                                    <th>Time</th>
+                                    <th>Block</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var Ticket in Model.Tickets)
+                                {
+                                    if (Model.Passenger.Tickets.Contains(Ticket))
+                                    {
+                                        DateTime Time = DateTime.Parse(Ticket.Trip.Time);
+                                        String TimeString = Time.ToString("dd/MM/yyyy");
+                                        Time = DateTime.ParseExact(TimeString, "dd/MM/yyyy", null);
+                                        DateTime Today = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                        if (DateTime.Compare(Time, Today) >= 0)
+                                        {
+                                            <tr>
+                                                <td>@Ticket.Id</td>
+                                                <td>@Ticket.Trip.Id</td>
+                                                <td>From @Ticket.Trip.Line.From To @Ticket.Trip.Line.To</td>
+                                                <td>@Ticket.Trip.Time</td>
+                                                <td>@Ticket.IsBlocked</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="@Url.Action("Ticket", "Passengers", new { pid = Model.Passenger.Id, tid = Ticket.Id, trip = @Ticket.Trip.Id })" class="btn btn-info">View</a>
+                                                        @*<a href="@Url.Action("CancelBooking", "Passengers", new { pid = Model.Passenger.Id, tid = Ticket.Id })" class="btn btn-danger">Cancel</a>*@
+                                                        <button class="btn btn-danger js-delete" data-passenger-id="@Model.Passenger.Id" data-ticket-id="@Ticket.Id">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Sorry!</strong> We Didn't Find Any Ticket To Show.
+                        </div>
+                    }
+                </div>
+
+                <div id="ExpiredTicket" class="tab-pane fade">
+                    <br />
+                    @if (Model.Tickets != null)
+                    {
+                        <table class="table table-responsive table-striped" id="exTickets">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Trip Number</th>
+                                    <th>Line</th>
+                                    <th>Time</th>
+                                    <th>Block</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var Ticket in Model.Tickets)
+                                {
+                                    if (Model.Passenger.Tickets.Contains(Ticket))
+                                    {
+                                        DateTime Time = DateTime.Parse(Ticket.Trip.Time);
+                                        String TimeString = Time.ToString("dd/MM/yyyy");
+                                        Time = DateTime.ParseExact(TimeString, "dd/MM/yyyy", null);
+                                        DateTime Today = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                        if (DateTime.Compare(Time, Today) < 0)
+                                        {
+                                            <tr>
+                                                <td>@Ticket.Id</td>
+                                                <td>@Ticket.Trip.Id</td>
+                                                <td>From @Ticket.Trip.Line.From To @Ticket.Trip.Line.To</td>
+                                                <td>@Ticket.Trip.Time</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="@Url.Action("Ticket", "Passengers", new { pid = Model.Passenger.Id, tid = Ticket.Id, trip = @Ticket.Trip.Id })" class="btn btn-info">View</a>
+                                                        <a href="@Url.Action("Feedback", "Passengers", new { pid = Model.Passenger.Id, trip = Ticket.Trip.Id })" class="btn btn-warning">Feedback</a>                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Sorry!</strong> We Didn't Find Any Ticket To Show.
+                        </div>
+                    }
+                </div>
+            </div>
+            <a href="@Url.Action("Booking", "Passengers", new { id = Model.Passenger.Id })" class="btn btn-block btn-info">Booking</a>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {    
+
+            ////To Make My Table is a DataTable 
+            //$("#currentTickets").DataTable();
+            //$("#exTickets").DataTable();
+
+            $("#currentTickets").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Delete This Ticket!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/CancelBooking/" + button.attr("data-passenger-id") +"/"+ button.attr("data-ticket-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Successful Process");
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });
+                    }
+                });
+            });            
+        });
+    </script>
+
+}

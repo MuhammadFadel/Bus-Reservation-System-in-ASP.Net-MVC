@@ -1,0 +1,73 @@
+﻿@model OnlineBusReservationV6.Models.Feedback
+
+@{
+    ViewBag.Title = "Feedback";
+}
+
+<div class="container">
+    <br /><br />
+    <h2>Feedback</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-responsive table-condensed">
+                <tr>
+                    <td>Trip Number</td>
+                    <td>@Model.TripId.Id</td>
+                </tr>
+                <tr>
+                    <td>Trip Line</td>
+                    <td>@Model.TripId.ToString</td>
+                </tr>
+                <tr>
+                    <td>Bus Number</td>
+                    <td>@Model.TripId.Bus.BusNumber</td>
+                </tr>
+                <tr>
+                    <td>Driver Name</td>
+                    <td>@Model.TripId.Bus.Driver.Name</td>
+                </tr>
+            </table>
+            <div>
+                @Html.ActionLink("Back to Profile", "Index", null, htmlAttributes: new { @class = "btn btn-info" })
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-1">
+            @using (Html.BeginForm("Feedback", "Passengers", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">                    
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.PassengerId.Id)
+                    @Html.HiddenFor(model => model.TripId.Id)                    
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            <div class="form-group">                                                              
+                                <div class="col-md-offset-1 col-md-10 ">
+                                    @Html.TextAreaFor(model => model.FeedbackMessage, new { @class = "form-control", row=3, placeholder = "Please Write Your Feedback Here." })
+                                    @*<textarea form="FeedbackMessage" class="form-control" rows="3" placeholder="Please Write Your Feedback Here."></textarea>*@                                    
+                                    @Html.ValidationMessageFor(model => model.FeedbackMessage, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-1 col-md-10">
+                                    <input type="submit" value="Submit" class="btn btn-success btn-block" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            }
+        </div>
+    </div>
+    
+
+</div>
+
+
+
+
+

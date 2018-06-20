@@ -1,0 +1,43 @@
+﻿@model OnlineBusReservationV6.Models.Line
+
+@{
+    ViewBag.Title = "View Line";
+}
+
+<div class="container">
+    <h2>View Line</h2>
+
+
+    <h4>Line</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th><span class="fa fa-user fa-fw"></span> From</th>
+                    <td>@Html.DisplayFor(c => c.From)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-id-card fa-fw"></span> To</th>
+                    <td>@Html.DisplayFor(c => c.To)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-at fa-fw"></span> Price</th>
+                    <td>@Html.DisplayFor(c => c.Price)</td>
+                </tr>                
+            </table>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <img src="~/Uploads\@Model.LinePicture" title="From @Model.From To @Model.To" class="img-responsive img-thumbnail" height="300px" width="450px" />
+        </div>
+    </div>
+
+
+    <p>
+        <div class="btn-group">
+            @Html.ActionLink("Back to List", "Lines", null, new { @class = "btn btn-success" })
+            @Html.ActionLink("Edit", "EditLine", new { id = Model.Id }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Delete", "DeleteLine", new { id = Model.Id }, new { @class = "btn btn-danger" })
+        </div>
+    </p>
+</div>

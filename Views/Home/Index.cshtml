@@ -1,0 +1,301 @@
+﻿@model OnlineBusReservationV6.Models.LinesBusesDriversView
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="intro-text" id="page-top">
+            <div class="intro-lead-in">Welcome To Our Transportation!</div>
+            <div class="intro-heading">It's Nice To Meet You</div>
+            <a href="#about" class="page-scroll btn btn-xl">Tell Me More</a>
+        </div>
+    </div>
+</header>
+<!-- Services Section -->
+<section id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">About Us</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-users fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="service-heading">Team</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-home fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="service-heading">Comfortable</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="service-heading">Safety</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Portfolio Grid Section -->
+<section id="trips" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Trips</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var Trip in Model.Trips)
+            {
+                <div class="col-md-4 col-sm-6 portfolio-item">
+                    <a href="#Model-@Trip.Id" class="portfolio-link" data-toggle="modal">
+                        <div class="portfolio-hover">
+                            <div class="portfolio-hover-content">
+                                <i class="fa fa-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="~/Uploads/@Trip.TripPicture" class="img-responsive" alt="Line @Trip.ToString Picture">
+                    </a>
+                    <div class="portfolio-caption">
+                        <h4>@Trip.ToString</h4>
+                        <p class="text-muted">@Trip.Time</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Modals -->
+                <!-- Use the modals below to showcase details about your portfolio projects! -->
+                <!-- Portfolio Modal 1 -->
+                <div class="portfolio-modal modal fade" id="Model-@Trip.Id" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="close-modal" data-dismiss="modal">
+                                <div class="lr">
+                                    <div class="rl">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-8 col-lg-offset-2">
+                                        <div class="modal-body">
+                                            <!-- Project Details Go Here -->
+                                            <h2>@Trip.ToString</h2>
+                                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                                            <img class="img-responsive img-centered" src="~/Uploads/@Trip.TripPicture" alt="@Trip.ToString Picture">
+                                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                                            @*<p>
+                                                <strong>Want these icons in this portfolio item sample?</strong>
+                                            </p>*@
+                                            <ul class="list-inline">
+                                                <li>Date: @Trip.Time</li>
+                                                <li>Line: @Trip.ToString</li>
+                                                <li>Price: $@Trip.Line.Price</li>
+                                            </ul>
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }                                    
+
+        </div>
+    </div>
+</section>
+<!-- Buses Section -->
+<section id="buses">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Buses</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="timeline">
+                    
+                    @{
+                            var TimeLineStyleClass = "";
+                            var TimeLineInvertedStyleClass = "timeline-inverted";
+                            var CurrentStyle = TimeLineStyleClass;
+                            foreach (var Bus in Model.Buses)
+                            {
+                            <li class="@CurrentStyle">
+                                <div class="timeline-image">
+                                    <img class="img-circle img-responsive" src="~/Uploads/@Bus.BusPicture" alt="Bus Color is @Bus.Color">
+                                </div>
+                                <div class="timeline-panel">
+                                    <div class="timeline-heading">
+                                        <h4>@Bus.BusNumber</h4>
+                                        <h4 class="subheading">@Bus.Driver.Name</h4>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <p class="text-muted">This Bus is Awesome one that number is @Bus.BusNumber , The Driver Who will be our Transportation Hero is @Bus.Driver.Name, You will take all Information about him in your Ticket.</p>
+                                    </div>
+                                </div>
+                            </li>
+
+                            if(CurrentStyle == TimeLineStyleClass)
+                            {
+                                CurrentStyle = TimeLineInvertedStyleClass;
+                            }
+                            else
+                            {
+                                CurrentStyle = TimeLineStyleClass;
+                            }
+                        }
+                    }                                        
+
+                    <li class="timeline-inverted">
+                        <div class="timeline-image">
+                            <h4>
+                                Be Part
+                                <br>Of Our
+                                <br>Story!
+                            </h4>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section id="drivers" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Our Amazing Drivers</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var Driver in Model.Drivers)
+            {
+                <div class="col-sm-4">
+                    <div class="team-member">
+                        <img src="~/Uploads/@Driver.ProfilePicture" class="img-responsive img-circle" alt="@Driver.Name Picture">
+                        <h4>@Driver.Name</h4>
+                        <p class="text-muted">@Driver.EmailAddress</p>
+                        <ul class="list-inline social-buttons">
+                            <li>
+                                <a href="https://twitter.com/MuhammadXPii"><i class="fa fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://www.facebook.com/MuhammadM.Fadel"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/muhammadmfadel/"><i class="fa fa-linkedin"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <p class="large text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut eaque, laboriosam veritatis, quos non quis ad perspiciatis, totam corporis ea, alias ut unde.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Clients Aside -->
+<aside class="clients">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <a href="#">
+                    <img src="~/Content/Template/img/logos/envato.jpg" class="img-responsive img-centered" alt="">
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="#">
+                    <img src="~/Content/Template/img/logos/designmodo.jpg" class="img-responsive img-centered" alt="">
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="#">
+                    <img src="~/Content/Template/img/logos/themeforest.jpg" class="img-responsive img-centered" alt="">
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="#">
+                    <img src="~/Content/Template/img/logos/creative-market.jpg" class="img-responsive img-centered" alt="">
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+<!-- Contact Section -->
+<section id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Contact Us</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">                                
+
+                @using (Html.BeginForm("Contact", "Home"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.ContactUsForm.Name, new { @class = "form-control", placeholder = "Your Name *"})
+                                <p class="help-block text-danger"></p>
+                            </div>                           
+                            <div class="form-group">                                
+                                @Html.TextBoxFor(m => m.ContactUsForm.EmailAddress, new { @class = "form-control", placeholder = "Your Email Address *"})
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">                                
+                                @Html.TextBoxFor(m => m.ContactUsForm.PhoneNumber, new { @class = "form-control", placeholder = "Your Phone Number *"})
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">                                
+                                @Html.TextAreaFor(m=>m.ContactUsForm.Message, new { @class = "form-control", placeholder = "Your Message *"})
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-12 text-center">
+                            <div id="success"></div>                            
+                            <button type="submit" class="btn btn-xl">Send Message</button>
+                        </div>                        
+                    </div>                   
+                }
+
+
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,86 @@
+﻿@model OnlineBusReservationV6.Models.PassengerTicketView
+
+@{
+    ViewBag.Title = "View Ticket";
+}
+
+<div class="container">    
+    <div class="row">
+        <h2>View Ticket</h2>
+        <h4>@Model.Passenger.ApplicationUser.UserName</h4>        
+        <h5>@Model.Passenger.ApplicationUser.PhoneNumber</h5>
+        <h6>@Model.Passenger.ApplicationUser.Email</h6>
+        
+        <hr />        
+            
+        <div class="col-md-5">
+            <table class="table table-responsive table-hover">
+                <tr>
+                    <td>ID</td>
+                    <td><a href="@Url.Action("ViewTrip", "Admin", new { id = Model.Ticket.Id})">@Model.Ticket.Id</a></td>
+                </tr>
+                <tr>
+                    <td>Bus Number</td>
+                    <td><a href="@Url.Action("ViewBus", "Admin", new { id = @Model.Ticket.Trip.Bus.Id})">@Model.Ticket.Trip.Bus.BusNumber</a></td>
+                </tr>
+                <tr>
+                    <td>From</td>
+                    <td>@Model.Ticket.Trip.Line.From</td>
+                </tr>
+                <tr>
+                    <td>To</td>
+                    <td>@Model.Ticket.Trip.Line.To</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td>$@Model.Ticket.Trip.Line.Price</td>
+                </tr>
+                <tr>
+                    <td>Payment</td>
+                    <td>@Model.Ticket.Payment.Method</td>
+                </tr>
+                <tr>
+                    <td>Blocked</td>
+                    <td>@Html.DisplayFor(c=>c.Ticket.IsBlocked)</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="col-md-5 col-md-offset-1">
+            <div class="panel panel-info">
+                <div class="panel-heading">Ticket Seats</div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Seat Id</th>
+                                <th>Seat Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Seat in Model.Seats)
+                            {
+                                <tr>
+                                    <td>@Seat.Id</td>
+                                    <td>@Seat.SeatNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>                
+    </div>
+    <div class="btn-group">
+        @Html.ActionLink("Back to Tickets List", "Tickets", null, new { @class = "btn btn-success" })
+        @Html.ActionLink("Back to Passenger", "ViewPassenger", new { id = Model.Passenger.Id}, new { @class = "btn btn-info" })
+        @*@if (Model.Ticket.IsBlocked)
+        {
+            @Html.ActionLink("UnBlock Ticket", "BlockTicket", new { pid = Model.Passenger.Id, tid = Model.Ticket.Id }, new { @class = "btn btn-warning" })
+        }
+        else
+        {
+            @Html.ActionLink("Block Ticket", "BlockTicket", new { pid = Model.Passenger.Id, tid = Model.Ticket.Id }, new { @class = "btn btn-danger" })
+        }*@
+    </div>
+</div>

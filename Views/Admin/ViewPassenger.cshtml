@@ -1,0 +1,188 @@
+﻿@model OnlineBusReservationV6.Models.PassengerUserTicketView
+
+@{
+    ViewBag.Title = "View Passenger";
+}
+
+<div class="container">
+    <h2>View Passenger</h2>
+    <h4>@Model.Passenger.ApplicationUser.UserName</h4>
+    <hr />    
+        <div class="col-md-10">
+            
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#Info">Information</a></li>
+                    <li><a data-toggle="tab" href="#Tickets">Tickets</a></li>
+                    <li><a data-toggle="tab" href="#ExpiredTickets">Expired Tickets</a></li>
+                </ul>
+
+
+                <div class="tab-content">
+                    <div id="Info" class="tab-pane fade in active row">
+                        <br />
+                        <div class="col-md-7">
+                            <table class="table table-responsive table-striped">
+                                <tr>
+                                    <th><span class="fa fa-user fa-fw"></span> Name</th>
+                                    <td>@Html.DisplayFor(c => c.Passenger.ApplicationUser.UserName)</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fa fa-id-card fa-fw"></span> Identity Number</th>
+                                    <td>@Html.DisplayFor(c => c.Passenger.ApplicationUser.SSN)</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fa fa-at fa-fw"></span> Email Address</th>
+                                    <td>@Html.DisplayFor(c => c.Passenger.ApplicationUser.Email)</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fa fa-mobile-phone fa-fw"></span> Mobile</th>
+                                    <td>@Html.DisplayFor(c => c.Passenger.ApplicationUser.PhoneNumber)</td>
+                                </tr>
+                                <tr>
+                                    <th><span class="fa fa-warning fa-fw"></span> Block</th>
+                                    <td>@Html.DisplayFor(c => c.Passenger.Blocked)</td>
+                                </tr>
+                            </table>
+                            <p>
+                                <div class="btn-group">
+                                    @Html.ActionLink("Back to List", "Passengers", null, new { @class = "btn btn-success" })
+                                    @if (Model.Passenger.Blocked)
+                                    {
+                                        @Html.ActionLink("UnBlock", "EditPassenger", new { id = Model.Passenger.Id }, new { @class = "btn btn-warning" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Block", "EditPassenger", new { id = Model.Passenger.Id }, new { @class = "btn btn-danger" })
+                                    }
+
+                                </div>
+                            </p>
+                        </div>
+                        <div class="col-md-4 col-md-offset-1">
+                            <div>
+                                <img src="~/Uploads\@Model.Passenger.ApplicationUser.ProfilePicture" title="@Model.Passenger.ApplicationUser.UserName" class="img-responsive img-thumbnail" height="400px" width="300px" />
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div id="Tickets" class="tab-pane fade">
+                        <br />
+                        @if (Model.Tickets != null)
+                        {
+                            <table class="table table-responsive table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Trip Number</th>
+                                        <th>Line</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var Ticket in Model.Tickets)
+                                    {
+                                        if (Model.Passenger.Tickets.Contains(Ticket))
+                                        {
+                                            DateTime Time = DateTime.Parse(Ticket.Trip.Time);
+                                            String TimeString = Time.ToString("dd/MM/yyyy");
+                                            Time = DateTime.ParseExact(TimeString, "dd/MM/yyyy", null);
+                                            DateTime Today = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                            if (DateTime.Compare(Time, Today) >= 0)
+                                            {
+                                                <tr>
+                                                    <td>@Ticket.Id</td>
+                                                    <td><a href="@Url.Action("ViewTrip", "Admin", new { pid = Ticket.Trip.Id})">@Ticket.Trip.Id</a></td>
+                                                    <td><a href="@Url.Action("ViewLine", "Admin", new { id = Ticket.Trip.Line.Id})">From @Ticket.Trip.Line.From To @Ticket.Trip.Line.To</a></td>
+                                                    <td>@Ticket.Trip.Time</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="@Url.Action("ViewTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id })" class="btn btn-info">View</a>
+                                                            @if (Ticket.IsBlocked)
+                                                            {
+                                                                <a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id})" class="btn btn-success">UnBlock</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id})" class="btn btn-warning">Block</a>
+                                                            }
+                                                            <a href="@Url.Action("DeleteTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id })" class="btn btn-danger">Delete</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>                            
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Sorry!</strong> We Didn't Find Any Ticket To Show.
+                            </div>
+                        }
+
+                    </div>
+
+                    <div id="ExpiredTickets" class="tab-pane fade">
+                        <br />
+                        @if (Model.Tickets != null)
+                        {
+                            <table class="table table-responsive table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Trip Number</th>
+                                        <th>Line</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var Ticket in Model.Tickets)
+                                    {
+                                        if (Model.Passenger.Tickets.Contains(Ticket))
+                                        {
+                                            DateTime Time = DateTime.Parse(Ticket.Trip.Time);
+                                            String TimeString = Time.ToString("dd/MM/yyyy");
+                                            Time = DateTime.ParseExact(TimeString, "dd/MM/yyyy", null);
+                                            DateTime Today = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null);
+                                            if (DateTime.Compare(Time, Today) < 0)
+                                            {
+                                                <tr>
+                                                    <td>@Ticket.Id</td>
+                                                    <td><a href="@Url.Action("ViewTrip", "Admin", new { id = Ticket.Trip.Id})">@Ticket.Trip.Id</a></td>
+                                                    <td><a href="@Url.Action("ViewLine", "Admin", new { id = Ticket.Trip.Line.Id})" s>From @Ticket.Trip.Line.From To @Ticket.Trip.Line.To</a></td>
+                                                    <td>@Ticket.Trip.Time</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="@Url.Action("ViewTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id })" class="btn btn-info">View</a>
+                                                            @if (Ticket.IsBlocked)
+                                                            {
+                                                                <a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id})" class="btn btn-success">UnBlock</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id})" class="btn btn-warning">Block</a>
+                                                            }
+                                                            <a href="@Url.Action("DeleteTicket", "Admin", new { pid = Model.Passenger.Id, tid = Ticket.Id })" class="btn btn-danger">Delete</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>                            
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Sorry!</strong> We Didn't Find Any Ticket To Show.
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>            
+</div>

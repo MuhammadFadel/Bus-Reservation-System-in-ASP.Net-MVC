@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "AdminProfile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Information</h2>
+            <table class="table table-responsive table-condensed">
+                @*<tr>
+                    <td>Name</td>
+                    <td>@Model.UserName</td>
+                </tr>*@
+                <tr>
+                    <td>Email</td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td>SSN</td>
+                    <td>@Model.SSN</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>@Model.PhoneNumber</td>
+                </tr>
+            </table>
+
+            <div>
+                <br /><br />
+                <a href="@Url.Action("Index", "Admin", new { id = Model.Id })" class="btn btn-block btn-info">Dashboard</a>
+                <a href="@Url.Action("AddPhoneNumber", "Manage", new { id = Model.Id })" class="btn btn-block btn-warning">Change My Phone Numebr</a>
+                <a href="@Url.Action("ChangePassword", "Manage", new { id = Model.Id })" class="btn btn-block btn-success">Change My Password</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-md-offset-1">
+            <br /><br />
+            <img src="~/Uploads/@Model.ProfilePicture" class="img-responsive img-thumbnail" title="@Model.UserName Profile Picture" />
+        </div>
+    </div>
+</div>

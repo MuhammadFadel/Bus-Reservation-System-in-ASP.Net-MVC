@@ -1,0 +1,69 @@
+﻿@model OnlineBusReservationV6.Models.BusSeatsView
+@{
+    ViewBag.Title = "Seats";
+}
+
+<div class="container">
+
+    <h2>Seats</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Seats on Bus - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="seats">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-id-badge"></span> Seat ID</th>
+                        <th><span class="fa fa-location-arrow"></span> Seat Number</th>
+                        <th><span class="fa fa-user-circle"></span> Passenger Name</th>
+                        <th><span class="fa fa-id-card-o"></span> Passenger ID</th>                        
+                        <th><span class="fa fa-mobile-phone"></span> Passenger Phone</th>                        
+                        <th>
+                            @*<a href="@Url.Action("AddSeat", "Admin")" class="btn btn-link">
+                                <span class="fa fa-plus fa-fw  text-info"></span> Add New Seat
+                            </a>*@
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Seat in Model.Seats)
+                    {
+                        if (Model.Bus.BookedSeats.Contains(Seat))
+                        {
+                            <tr>
+                                <td>@Seat.Id</td>
+                                <td>@Seat.SeatNumber</td>
+                                <td><a href="@Url.Action("ViewPassenger", "Admin", new { id = @Seat.PassengerId})">@Seat.Passenger.ApplicationUser.UserName</a></td>
+                                <td>@Seat.Passenger.ApplicationUser.SSN</td>                                
+                                <td>@Seat.Passenger.ApplicationUser.PhoneNumber</td>
+                                <td>
+                                    @*<div class="btn-group">
+                                        <a href="@Url.Action("EditSeat", "Admin", new { id = Seat.Id})" class="btn btn-info">Edit</a>
+                                        <a href="@Url.Action("BlockTicket", "Admin", new { id = Seat.Id})" class="btn btn-success">Block</a>
+                                        <a href="@Url.Action("DeleteSeat", "Admin", new { id = Seat.Id})" class="btn btn-danger">Delete</a>
+                                    </div>*@
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#seats").DataTable();                        
+        });
+    </script>
+
+}

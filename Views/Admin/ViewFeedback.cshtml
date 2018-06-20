@@ -1,0 +1,36 @@
+﻿@model OnlineBusReservationV6.Models.Feedback
+
+@{
+    ViewBag.Title = "ViewFeedback";
+}
+
+
+<div class="container">
+    <br /><br />
+    <div class="row">
+        <div class="col-md-3">
+            <h2>@Model.PassengerId.ApplicationUser.UserName</h2>
+            <h4>@Model.PassengerId.ApplicationUser.PhoneNumber</h4>
+            <h5>@Model.PassengerId.ApplicationUser.Email</h5> 
+            <div>
+                <img src="~/Uploads/@Model.PassengerId.ApplicationUser.ProfilePicture" class="img-responsive img-thumbnail" width="250px" height="350px" />
+            </div>
+        </div>
+        <div class="col-md-7 col-md-offset-1">
+            <h3>Line: From @Model.TripId.Line.From To @Model.TripId.Line.To</h3>
+            <p>Trip Id:<a href="@Url.Action("ViewTrip", "Admin", new { id = @Model.TripId.Id})"> @Model.TripId.Id </a> </p>
+            <p> Bus Id: <a href="@Url.Action("ViewBus", "Admin", new { id = @Model.TripId.BusId})">@Model.TripId.BusId</a></p>
+            <p>@Model.Timestamp</p>
+            <div class="panel panel-info">
+                <div class="panel-heading">Message Content</div>
+                <div class="panel-body">@Model.FeedbackMessage</div>
+            </div>            
+        </div>        
+    </div>
+    <div>
+        <p>
+            <br /><br /><br />
+            @Html.ActionLink("Back to Feedbacks", "Feedbacks", null, new { @class = "btn btn-success" })
+        </p>
+    </div>
+</div>

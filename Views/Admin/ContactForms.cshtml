@@ -1,0 +1,58 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.ContactUsForm>
+@{
+    ViewBag.Title = "ContactForms";
+}
+
+
+<div class="container">
+
+    <h2>ContactForms</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Contact Forms on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="messages">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-user"></span> Name</th>
+                        <th><span class="fa fa-at"></span> Email</th>
+                        <th><span class="fa fa-envelope-o"></span> Message</th>
+                        <th><span class="fa fa-calendar"></span> Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ContactForm in Model)
+                    {
+                        <tr>
+                            <td>@ContactForm.Name</td>
+                            <td>@ContactForm.EmailAddress</td>
+                            <td>@ContactForm.Message</td>
+                            <td>@ContactForm.TimeStamp</td>
+                            <td>
+                                    <a href="@Url.Action("ViewContactForm", "Admin", new { id = ContactForm.Id})" class="btn btn-info">View</a>                                    
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#messages").DataTable();
+        });
+
+    </script>
+
+}

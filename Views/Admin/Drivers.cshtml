@@ -1,0 +1,83 @@
+﻿@model IEnumerable<OnlineBusReservationV6.Models.Driver>
+@{
+    ViewBag.Title = "Drivers";
+}
+
+<div class="container">
+
+    <h2>Drivers</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Buses on System - Statistics Overview</p>
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <table class="table table-hover table-responsive" id="drivers">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-user-circle-o"></span> Name</th>
+                        <th><span class="fa fa-id-card-o"></span> Identity Number</th>
+                        <th><span class="fa fa-phone"></span> Phone</th>
+                        <th><span class="fa fa-at"></span> Email</th>                        
+                        <th>
+                            <a href="@Url.Action("AddDriver", "Admin")" class="btn btn-link">
+                                <span class="fa fa-plus fa-fw  text-info"></span> Add New Driver
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Driver in Model)
+                    {
+                        <tr>
+                            <td>@Driver.Name</td>
+                            <td>@Driver.SSN</td>
+                            <td>@Driver.PhoneNumber</td>
+                            <td>@Driver.EmailAddress</td>                            
+                            <td>
+                                <div class="btn-group">
+                                    <a href="@Url.Action("ViewDriver", "Admin", new { id = Driver.Id})" class="btn btn-info">View</a>
+                                    <a href="@Url.Action("EditDriver", "Admin", new { id = Driver.Id})" class="btn btn-success">Edit</a>
+                                    <a href="@Url.Action("DeleteDriver", "Admin", new { id = Driver.Id})" class="btn btn-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable
+            $("#drivers").DataTable();
+
+            $("#drivers").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Delete This Bus!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/DeleteDriver/" + button.attr("data-bus-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Successful Process");
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+}

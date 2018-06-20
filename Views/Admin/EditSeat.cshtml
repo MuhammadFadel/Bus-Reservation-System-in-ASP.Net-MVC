@@ -1,0 +1,50 @@
+﻿@model OnlineBusReservationV6.Models.SeatPassengerView
+
+@{
+    ViewBag.Title = "Edit Seat";
+}
+
+
+<div class="container">
+    <div class="row">
+        <h2>Edit Seat</h2>        
+
+            @using (Html.BeginForm("EditSeat", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>Seat</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Seat.Id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Seat.SeatNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Seat.SeatNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Seat.SeatNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Seat.PassengerId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.Seat.PassengerId, new SelectList(Model.Passengers.Where(c=>c.Blocked == false), "Id", "Id"), "Select Passenger Id", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Seat.PassengerId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>                    
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-info btn-block" required />
+                            <div>
+                                <br />
+                                @Html.ActionLink("Back to Buses List", "Buses", null, new { @class = "btn btn-block btn-success" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }                
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model OnlineBusReservationV6.Models.PassengersTicketsView
+@{
+    ViewBag.Title = "Tickets";
+}
+
+
+
+<div class="container">
+
+    <h2>Tickets</h2>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-default pull-right">
+        <span class="fa fa-dashboard fa-fw  text-info"></span> Dashboard
+    </a>
+    <p>Whole Tickets on System - Statistics Overview</p>
+
+    <div class="row">
+        <div class="col-md-12"><br /><br />
+            <table class="table table-hover table-responsive" id="tickets">
+                <thead>
+                    <tr>
+                        <th><span class="fa fa-ticket"></span> Ticket ID</th>
+                        <th><span class="fa fa-user"></span>  Name</th>
+                        <th><span class="fa fa-location-arrow"></span> Line</th>
+                        <th><span class="fa fa-bus"></span> Bus</th>
+                        <th><span class="fa fa-user-circle"></span> Driver</th>
+                        <th><span class="fa fa-calendar-check-o"></span> Trip Time</th>
+                        <th><span class="fa fa-calendar"></span> Booking Time</th>
+                        <th><span class="fa fa-paypal"></span> Payment</th>
+                        <th><span class="fa fa-dollar-sign"></span> Price</th>
+                        <th>
+                            @*<a href="@Url.Action("AddTicket", "Admin")" class="btn btn-link">
+                                <span class="fa fa-plus fa-fw  text-info"></span> Add New Ticket
+                            </a>*@
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Ticket in Model.Tickets)
+                    {
+                        foreach(var Passenger in Model.Passengers)
+                        {
+                            if (Passenger.Tickets.Contains(Ticket))
+                            {
+                                Model.SpecificPassenger = Passenger;
+                            }
+                        }
+                        Model.SpecificBus = Model.Buses.Find(c => c.Id == Ticket.Trip.BusId);
+                        <tr>
+                            <td>@Ticket.Id</td>
+                            <td><a href="@Url.Action("ViewPassenger", "Admin", new { id = Model.SpecificPassenger.Id})">@Model.SpecificPassenger.ApplicationUser.UserName</a></td>
+                            <td>From @Ticket.Trip.Line.From To @Ticket.Trip.Line.To</td>
+                            <td><a href="@Url.Action("ViewBus", "Admin", new { id = Model.SpecificBus.Id})">@Model.SpecificBus.BusNumber</a></td>
+                            <td><a href="@Url.Action("ViewDriver", "Admin", new { id = Model.SpecificBus.Driver.Id})">@Model.SpecificBus.Driver.Name</a></td>
+                            <td>@Ticket.Trip.Time</td>
+                            <td>@Ticket.BookingTime</td>
+                            <td>@Ticket.Payment.Method</td>
+                            <td>$@Ticket.Trip.Line.Price</td>
+                            <td>
+                                <div class="btn-group-vertical">                                    
+                                    <a href="@Url.Action("ViewTicket", "Admin", new { pid = Model.SpecificPassenger.Id, tid = Ticket.Id})" class="btn btn-info btn-sm">View</a>
+                                    @if (Ticket.IsBlocked)
+                                    {
+                                        @*<a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.SpecificPassenger.Id, tid = Ticket.Id})" class="btn btn-success">UnBlock</a>*@
+                                        <button class="btn btn-success btn-sm js-Block" data-passenger-id="@Model.SpecificPassenger.Id" data-ticket-id="@Ticket.Id">UnBlock</button>
+                                    }
+                                    else
+                                    {
+                                        @*<a href="@Url.Action("BlockTicket", "Admin", new { pid = Model.SpecificPassenger.Id, tid = Ticket.Id})" class="btn btn-warning">Block</a>*@
+                                        <button class="btn btn-warning btn-sm js-Block" data-passenger-id="@Model.SpecificPassenger.Id" data-ticket-id="@Ticket.Id">Block</button>
+                                    }
+                                    @*<a href="@Url.Action("DeleteTicket", "Admin", new { pid = Model.SpecificPassenger.Id, tid = Ticket.Id })" class="btn btn-danger">Delete</a>*@
+                                    <button class="btn btn-danger btn-sm js-delete" data-passenger-id="@Model.SpecificPassenger.Id" data-ticket-id="@Ticket.Id">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts 
+{
+
+    <script>
+        $(document).ready(function () {
+            //To Make My Table is a DataTable 
+            $("#tickets").DataTable();
+
+            $("#tickets").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Delete This Ticket!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/DeleteTicket/" + button.attr("data-passenger-id") +"/"+ button.attr("data-ticket-id"),
+                            method: "Delete",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Successful Process");
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });
+                    }
+                });                
+            });
+
+            //Blocking Function in AJAX
+            $("#tickets").on("click", ".js-Block", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure You Want to Block This Ticket!", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/BlockTicket/" + button.attr("data-passenger-id") + "/" + button.attr("data-ticket-id"),
+                            method: "Delete",
+                            success: function () {
+                                if (button.text().toLowerCase() == "block") {                                    
+                                    button.text("Unblock");
+                                    button.removeClass("btn-warning");
+                                    button.addClass("btn-success");
+                                    toastr.success("Successful Process");
+                                } 
+                                else if (button.text().toLowerCase() == "unblock") {                                    
+                                    button.text("Block");
+                                    button.removeClass("btn-success");
+                                    button.addClass("btn-warning");
+                                    toastr.success("Successful Process");
+                                }
+                                
+                            },
+                            fail: function () {
+                                toastr.error("Can't Operate This Process");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>            
+
+}

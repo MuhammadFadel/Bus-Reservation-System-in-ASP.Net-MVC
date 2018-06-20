@@ -1,0 +1,56 @@
+﻿@model OnlineBusReservationV6.Models.Bus
+
+@{
+    ViewBag.Title = "View Bus";
+}
+<div class="container">
+    <h2>View Bus</h2>
+    <h4>Bus</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th><span class="fa fa-bus fa-fw"></span> Bus Number</th>
+                    <td>@Html.DisplayFor(c => c.BusNumber)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-shekel fa-fw"></span> Color</th>
+                    <td>@Html.DisplayFor(c => c.Color)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-user-circle-o fa-fw"></span> Driver Name</th>
+                    <td><a href="@Url.Action("ViewDriver", "Admin", new { id=Model.Driver.Id })">@Html.DisplayFor(c => c.Driver.Name)</a></td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-mobile-phone fa-fw"></span> Mobile</th>
+                    <td>@Html.DisplayFor(c => c.Driver.PhoneNumber)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-window-maximize fa-fw"></span> Maximum Seats</th>
+                    <td>@Html.DisplayFor(c => c.MaximumSeats)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-check-square-o fa-fw"></span> Booked Seats</th>
+                    <td><a href="@Url.Action("Seats", "Admin", new { id=Model.Id })">@Html.DisplayFor(c => c.BookedSeats.Count) Booked</a></td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-square-o fa-fw"></span> Free Seats</th>
+                    <td>@(@Model.MaximumSeats - @Model.BookedSeats.Count)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <img src="~/Uploads\@Model.BusPicture" title="@Model.BusNumber" class="img-responsive img-thumbnail" height="300px" width="400px" />
+        </div>
+    </div>
+
+
+    <p>
+        <div class="btn-group">
+            @Html.ActionLink("Back to List", "Buses", null, new { @class = "btn btn-success" })
+            @Html.ActionLink("Edit", "EditBus", new { id = Model.Id }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Delete", "DeleteBus", new { id = Model.Id }, new { @class = "btn btn-danger" })
+        </div>
+    </p>
+</div>

@@ -1,0 +1,61 @@
+﻿@model OnlineBusReservationV6.Models.Trip
+
+@{
+    ViewBag.Title = "ViewTrip";
+}
+
+<div class="container">
+    <h2>View Trip</h2>
+    <h4>Trip</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th><span class="fa fa-id-badge fa-fw"></span> Trip Number</th>
+                    <td>@Html.DisplayFor(c => c.Id)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-bus fa-fw"></span> Bus Number</th>
+                    <td><a href="@Url.Action("ViewBus", "Admin", new { id=Model.BusId })">@Html.DisplayFor(c => c.Bus.BusNumber)</a></td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-user-circle-o fa-fw"></span> Driver Name</th>
+                    <td><a href="@Url.Action("ViewDriver", "Admin", new { id=Model.Bus.Driver.Id })">@Html.DisplayFor(c => c.Bus.Driver.Name)</a></td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-mobile-phone fa-fw"></span> Mobile</th>
+                    <td>@Html.DisplayFor(c => c.Bus.Driver.PhoneNumber)</td>
+                </tr>                
+                <tr>
+                    <th><span class="fa fa-check-square-o fa-fw"></span> Booked Seats</th>
+                    <td><a href="@Url.Action("Seats", "Admin", new { id=Model.Id })">@Html.DisplayFor(c => c.Bus.BookedSeats.Count) Booked</a></td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-square-o fa-fw"></span> Free Seats</th>
+                    <td>@(@Model.Bus.MaximumSeats - @Model.Bus.BookedSeats.Count)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-dollar fa-fw"></span> Price</th>
+                    <td>$@Model.Line.Price</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-calendar fa-fw"></span> Time</th>
+                    <td>@DateTime.Parse(@Model.Time).ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <img src="~/Uploads\@Model.TripPicture" title="From @Model.Line.From To @Model.Line.To" class="img-responsive img-thumbnail" height="300px" width="400px" />
+        </div>
+    </div>
+
+
+    <p>
+        <div class="btn-group">
+            @Html.ActionLink("Back to List", "Trips", null, new { @class = "btn btn-success" })
+            @Html.ActionLink("Edit", "EditTrip", new { id = Model.Id }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Delete", "DeleteTrip", new { id = Model.Id }, new { @class = "btn btn-danger" })
+        </div>
+    </p>
+</div>

@@ -1,0 +1,49 @@
+﻿@model OnlineBusReservationV6.Models.Driver
+
+@{
+    ViewBag.Title = "ViewDriver";
+}
+
+<div class="container">
+    <h2>View Driver</h2>
+    <h4>Driver</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th><span class="fa fa-user fa-fw"></span> Name</th>
+                    <td>@Html.DisplayFor(c => c.Name)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-id-card fa-fw"></span> Identity Number</th>
+                    <td>@Html.DisplayFor(c => c.SSN)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-at fa-fw"></span> Email Address</th>
+                    <td>@Html.DisplayFor(c => c.EmailAddress)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-mobile-phone fa-fw"></span> Mobile</th>
+                    <td>@Html.DisplayFor(c => c.PhoneNumber)</td>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-drivers-license-o fa-fw"></span> Driving Licence</th>
+                    <td>@Html.DisplayFor(c => c.DriverLicence)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <img src="~/Uploads\@Model.ProfilePicture" title="@Model.Name" class="img-responsive img-thumbnail" height="400px" width="300px" />
+        </div>
+    </div>
+
+
+    <p>
+        <div class="btn-group">
+            @Html.ActionLink("Back to List", "Drivers", null, new { @class = "btn btn-success" })
+            @Html.ActionLink("Edit", "EditDriver", new { id = Model.Id }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Delete", "DeleteDriver", new { id = Model.Id }, new { @class = "btn btn-danger" })
+        </div>
+    </p>
+</div>
